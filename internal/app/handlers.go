@@ -38,6 +38,21 @@ func getStates(c echo.Context) error {
 	return c.HTML(http.StatusOK, statesHtml)
 }
 
+func getReportsJson(c echo.Context) error {
+	var reports any
+
+	result := db.Find(&reports)
+	if result.RowsAffected == 0 {
+		reportsData, err := FetchReports()
+		if err != nil {
+			return err
+		}
+		reports = reportsData.Reports
+	}
+
+	return c.JSON(http.StatusOK, reports)
+}
+
 func getStatesJson(c echo.Context) error {
 	statesData, err := FetchStates()
 	if err != nil {
